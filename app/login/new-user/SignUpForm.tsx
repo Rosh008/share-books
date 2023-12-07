@@ -1,6 +1,9 @@
 "use client";
 
+import FormInput from "@/app/components/FormInput";
 import { handleSignUpFormSubmit } from "@/app/lib/actions/loginActions";
+import PasswordInput from "@/app/login/components/PasswordInput";
+import { EnvelopeIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -8,7 +11,7 @@ import { z } from "zod";
 export const signupFormSchema = z.object({
   firstName: z.string().max(50).min(1, { message: "Field is required" }),
   lastName: z.string().max(50).min(1, { message: "Field is required" }),
-  email: z.string().email(),
+  email: z.string().email({ message: "Field is required" }),
   password: z.string().min(4),
   confirmPassword: z.string().min(4),
 });
@@ -39,67 +42,44 @@ export default function SignUpForm(): JSX.Element {
   return (
     <form
       onSubmit={handleSubmit((data) => onFormSubmit(data))}
-      className="flex flex-col gap-4 mt-5"
+      className="flex flex-col gap-6 mt-8 w-4/5"
     >
       <div className="flex gap-6">
-        <div className="w-full">
-          <input
-            type="text"
-            placeholder="First name"
-            {...register("firstName")}
-            className="input input-bordered input-primary w-full bg-secondary"
-          />
-          {errors.firstName ? (
-            <p className="mt-3 text-sm text-error">
-              {errors.firstName.message}
-            </p>
-          ) : null}
-        </div>
-        <div className="w-full">
-          <input
-            type="text"
-            placeholder="Last name"
-            {...register("lastName")}
-            className="input input-bordered input-primary w-full"
-          />
-          {errors.lastName ? (
-            <p className="mt-3 text-sm text-error">{errors.lastName.message}</p>
-          ) : null}
-        </div>
+        <FormInput
+          type="text"
+          placeholder="First name"
+          rightIcon={<UserCircleIcon className="h-6 w-6 text-secondary" />}
+          register={register("firstName")}
+          errorMsg={errors.firstName?.message}
+        />
+        <FormInput
+          type="text"
+          placeholder="Last name"
+          rightIcon={<UserCircleIcon className="h-6 w-6 text-secondary" />}
+          register={register("lastName")}
+          errorMsg={errors.lastName?.message}
+        />
       </div>
-      <input
-        type="text"
+      <FormInput
+        type="email"
         placeholder="Email"
-        {...register("email")}
-        className="input input-bordered input-primary w-full"
+        rightIcon={<EnvelopeIcon className="h-6 w-6 text-secondary" />}
+        register={register("email")}
+        errorMsg={errors.email?.message}
       />
-      {errors.email ? (
-        <p className="text-sm text-error">{errors.email.message}</p>
-      ) : null}
-
-      <input
-        type="text"
+      <PasswordInput
         placeholder="Password"
-        {...register("password")}
-        className="input input-bordered input-primary w-full"
+        register={register("password")}
+        errorMsg={errors.password?.message}
       />
-      {errors.password ? (
-        <p className="text-sm text-error">{errors.password.message}</p>
-      ) : null}
-
-      <input
-        type="text"
+      <PasswordInput
         placeholder="Confirm Password"
-        {...register("confirmPassword")}
-        className="input input-bordered input-primary w-full"
+        register={register("confirmPassword")}
+        errorMsg={errors.confirmPassword?.message}
       />
-      {errors.confirmPassword ? (
-        <p className="text-sm text-error">{errors.confirmPassword.message}</p>
-      ) : null}
-
       <button
         type="submit"
-        className="self-center mt-3 btn btn-primary text-white w-full rounded-full text-lg"
+        className="mt-3 btn btn-primary text-white w-full rounded-full text-lg"
       >
         Create account
       </button>

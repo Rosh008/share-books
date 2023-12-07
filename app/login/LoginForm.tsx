@@ -1,11 +1,14 @@
 "use client";
+import FormInput from "@/app/components/FormInput";
 import { handleLoginFormSubmit } from "@/app/lib/actions/loginActions";
+import PasswordInput from "@/app/login/components/PasswordInput";
+import { EnvelopeIcon } from "@heroicons/react/24/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const loginFormSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email({ message: "Field is required" }),
   password: z.string().min(4),
 });
 
@@ -32,26 +35,20 @@ export default function LoginForm(): JSX.Element {
   return (
     <form
       onSubmit={handleSubmit((data) => onFormSubmit(data))}
-      className="flex flex-col gap-4 mt-5"
+      className="flex flex-col gap-6 mt-8 w-4/5"
     >
-      <input
-        type="text"
+      <FormInput
+        type="email"
         placeholder="Email"
-        {...register("email")}
-        className="input input-bordered input-primary w-full"
+        rightIcon={<EnvelopeIcon className="h-6 w-6 text-secondary" />}
+        register={register("email")}
+        errorMsg={errors.email?.message}
       />
-      {errors.email ? (
-        <p className="text-sm text-error">{errors.email.message}</p>
-      ) : null}
-      <input
-        type="text"
+      <PasswordInput
         placeholder="Password"
-        {...register("password")}
-        className="input input-bordered input-primary w-full"
+        register={register("password")}
+        errorMsg={errors.password?.message}
       />
-      {errors.password ? (
-        <p className="text-sm text-error">{errors.password.message}</p>
-      ) : null}
       <button
         type="submit"
         className="self-center mt-3 btn btn-primary text-white w-full rounded-full text-lg"
