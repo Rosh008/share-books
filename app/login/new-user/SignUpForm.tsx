@@ -2,19 +2,28 @@
 
 import FormInput from "@/app/components/FormInput";
 import { handleSignUpFormSubmit } from "@/app/lib/actions/loginActions";
+import {
+  MAX_FORM_INPUT_LENGTH,
+  MAX_FORM_PASSWORD_LENGTH,
+} from "@/app/lib/constants";
 import PasswordInput from "@/app/login/components/PasswordInput";
 import { EnvelopeIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export const signupFormSchema = z.object({
-  firstName: z.string().max(50).min(1, { message: "Field is required" }),
-  lastName: z.string().max(50).min(1, { message: "Field is required" }),
-  email: z.string().email({ message: "Field is required" }),
-  password: z.string().min(4),
-  confirmPassword: z.string().min(4),
-});
+export const signupFormSchema = z
+  .object({
+    firstName: z.string().max(50).min(1, { message: "Field is required" }),
+    lastName: z.string().max(50).min(1, { message: "Field is required" }),
+    email: z.string().email(),
+    password: z.string().min(4),
+    confirmPassword: z.string().min(4),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 export type SignUpFormFields = z.infer<typeof signupFormSchema>;
 
@@ -25,13 +34,6 @@ export default function SignUpForm(): JSX.Element {
     formState: { errors, isValid },
   } = useForm<SignUpFormFields>({
     resolver: zodResolver(signupFormSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
   });
 
   const onFormSubmit = async (data: SignUpFormFields) => {
@@ -51,6 +53,7 @@ export default function SignUpForm(): JSX.Element {
           rightIcon={<UserCircleIcon className="h-6 w-6 text-secondary" />}
           register={register("firstName")}
           errorMsg={errors.firstName?.message}
+          maxLength={MAX_FORM_INPUT_LENGTH}
         />
         <FormInput
           type="text"
@@ -58,6 +61,7 @@ export default function SignUpForm(): JSX.Element {
           rightIcon={<UserCircleIcon className="h-6 w-6 text-secondary" />}
           register={register("lastName")}
           errorMsg={errors.lastName?.message}
+          maxLength={MAX_FORM_INPUT_LENGTH}
         />
       </div>
       <FormInput
@@ -66,16 +70,21 @@ export default function SignUpForm(): JSX.Element {
         rightIcon={<EnvelopeIcon className="h-6 w-6 text-secondary" />}
         register={register("email")}
         errorMsg={errors.email?.message}
+        maxLength={MAX_FORM_INPUT_LENGTH}
       />
       <PasswordInput
+        key="password"
         placeholder="Password"
         register={register("password")}
         errorMsg={errors.password?.message}
+        maxLength={MAX_FORM_PASSWORD_LENGTH}
       />
       <PasswordInput
+        key="confirmPassword"
         placeholder="Confirm Password"
         register={register("confirmPassword")}
         errorMsg={errors.confirmPassword?.message}
+        maxLength={MAX_FORM_PASSWORD_LENGTH}
       />
       <button
         type="submit"

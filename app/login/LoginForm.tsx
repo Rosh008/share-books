@@ -1,6 +1,10 @@
 "use client";
 import FormInput from "@/app/components/FormInput";
 import { handleLoginFormSubmit } from "@/app/lib/actions/loginActions";
+import {
+  MAX_FORM_INPUT_LENGTH,
+  MAX_FORM_PASSWORD_LENGTH,
+} from "@/app/lib/constants";
 import PasswordInput from "@/app/login/components/PasswordInput";
 import { EnvelopeIcon } from "@heroicons/react/24/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const loginFormSchema = z.object({
-  email: z.string().email({ message: "Field is required" }),
+  email: z.string().email(),
   password: z.string().min(4),
 });
 
@@ -43,11 +47,13 @@ export default function LoginForm(): JSX.Element {
         rightIcon={<EnvelopeIcon className="h-6 w-6 text-secondary" />}
         register={register("email")}
         errorMsg={errors.email?.message}
+        maxLength={MAX_FORM_INPUT_LENGTH}
       />
       <PasswordInput
         placeholder="Password"
         register={register("password")}
         errorMsg={errors.password?.message}
+        maxLength={MAX_FORM_PASSWORD_LENGTH}
       />
       <button
         type="submit"

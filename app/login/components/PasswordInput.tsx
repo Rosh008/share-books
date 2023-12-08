@@ -7,12 +7,14 @@ interface PasswordInputprops {
   placeholder: string;
   register: UseFormRegisterReturn;
   errorMsg?: string;
+  maxLength?: number;
 }
 
 export default function PasswordInput({
   placeholder,
   register,
   errorMsg,
+  maxLength,
 }: PasswordInputprops): JSX.Element {
   const [isVisible, setVisible] = React.useState(false);
   return (
@@ -31,6 +33,7 @@ export default function PasswordInput({
       onIconClick={() => {
         setVisible(!isVisible);
       }}
+      maxLength={maxLength}
     />
   );
 }

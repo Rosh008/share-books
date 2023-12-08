@@ -1,4 +1,4 @@
-import Input, { InputComponentProps } from "@/app/components/Input";
+import { Input, InputComponentProps } from "@/app/components/Input";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 interface FormInputProps extends InputComponentProps {
@@ -11,9 +11,10 @@ export default function FormInput({
   errorMsg,
   ...rest
 }: FormInputProps): JSX.Element {
+  const { ref, ...other } = register;
   return (
     <div className="w-full">
-      <Input {...register} {...rest} />
+      <Input ref={(e) => ref(e)} {...other} {...rest} />
       {errorMsg ? <p className="mt-3 text-sm text-error">{errorMsg}</p> : null}
     </div>
   );
