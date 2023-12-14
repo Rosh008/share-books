@@ -1,13 +1,17 @@
 "use client";
 import FormInput from "@/app/components/FormInput";
-import { handleLoginFormSubmit } from "@/app/lib/actions/loginActions";
 import {
   MAX_FORM_INPUT_LENGTH,
   MAX_FORM_PASSWORD_LENGTH,
 } from "@/app/lib/constants";
+import { MainRoutes } from "@/app/lib/routes";
 import PasswordInput from "@/app/login/components/PasswordInput";
+import SubmitError from "@/app/login/components/SubmitError";
 import { EnvelopeIcon } from "@heroicons/react/24/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -19,6 +23,10 @@ export const loginFormSchema = z.object({
 export type LoginFormFields = z.infer<typeof loginFormSchema>;
 
 export default function LoginForm(): JSX.Element {
+  const router = useRouter();
+  const supabase = createClientComponentClient();
+  const [error, setError] = React.useState("");
+
   const {
     register,
     handleSubmit,
@@ -32,8 +40,12 @@ export default function LoginForm(): JSX.Element {
   });
 
   const onFormSubmit = async (data: LoginFormFields) => {
-    await handleLoginFormSubmit(data);
-    console.log("submitted!");
+    const { error } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    });
+    if (error) setError(error.message);
+    router.push(MainRoutes.HOME);
   };
 
   return (
@@ -61,6 +73,9 @@ export default function LoginForm(): JSX.Element {
       >
         Log In
       </button>
+      {error ? (
+        <SubmitError errorMsg={error || "Something went wrong!"} />
+      ) : null}
     </form>
   );
 }
