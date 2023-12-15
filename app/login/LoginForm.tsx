@@ -10,6 +10,7 @@ import SubmitError from "@/app/login/components/SubmitError";
 import { EnvelopeIcon } from "@heroicons/react/24/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -61,12 +62,22 @@ export default function LoginForm(): JSX.Element {
         errorMsg={errors.email?.message}
         maxLength={MAX_FORM_INPUT_LENGTH}
       />
-      <PasswordInput
-        placeholder="Password"
-        register={register("password")}
-        errorMsg={errors.password?.message}
-        maxLength={MAX_FORM_PASSWORD_LENGTH}
-      />
+      <div>
+        <PasswordInput
+          placeholder="Password"
+          register={register("password")}
+          errorMsg={errors.password?.message}
+          maxLength={MAX_FORM_PASSWORD_LENGTH}
+        />
+        <div className="mt-3">
+          <Link
+            href={MainRoutes.RESET_PASSWORD}
+            className="text-sm text-primary hover:cursor-pointer px-2"
+          >
+            Forgot Password?
+          </Link>
+        </div>
+      </div>
       <button
         type="submit"
         className="self-center mt-3 btn btn-primary text-white w-full rounded-full text-lg"
