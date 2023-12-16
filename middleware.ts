@@ -14,6 +14,8 @@ export async function middleware(req: NextRequest) {
   }
 
   if(session && req.nextUrl.pathname.includes(MainRoutes.LOGIN)){
+    if(req.nextUrl.pathname === MainRoutes.PASSWORD_RECOVERY) return res;
+
     const url = req.nextUrl.clone();
     url.pathname = MainRoutes.HOME;
     return NextResponse.redirect(url)
