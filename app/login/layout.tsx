@@ -9,11 +9,11 @@ export default function LoginLayout({
 }) {
   return (
     <main className="w-full h-full flex gap-4">
-      <div className="w-1/2 p-8 flex flex-col">
+      <div className="w-full  md:w-1/2 p-4 md:p-8 flex flex-col">
         <Header />
         {children}
       </div>
-      <div className="relative w-1/2 h-full">
+      <div className="hidden relative w-1/2 h-full md:block">
         <Image
           src={banner}
           sizes="100vw"
