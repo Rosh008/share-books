@@ -1,0 +1,3 @@
+
+export const MAX_FORM_INPUT_LENGTH = 50;
+export const MAX_FORM_PASSWORD_LENGTH = 100;
